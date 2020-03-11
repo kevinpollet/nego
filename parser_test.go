@@ -8,29 +8,34 @@ import (
 
 func TestContentNegotiation(t *testing.T) {
 	testCases := []struct {
-		desc   string
-		accept string
-		expL   int
+		desc    string
+		accepts []string
+		expL    int
 	}{
 		{
-			desc:   "should return an empty map if the given value is empty",
-			accept: "",
-			expL:   0,
+			desc:    "should return an empty map if the given values are empty",
+			accepts: []string{},
+			expL:    0,
 		},
 		{
-			desc:   "should return a map with one element",
-			accept: "gzip",
-			expL:   1, //nolint
+			desc:    "should return a map with one element",
+			accepts: []string{"gzip"},
+			expL:    1, //nolint
 		},
 		{
-			desc:   "should return a map with the given number of elements",
-			accept: "gzip,deflate",
-			expL:   2, //nolint
+			desc:    "should return a map with the given number of elements",
+			accepts: []string{"gzip,deflate"},
+			expL:    2, //nolint
 		},
 		{
-			desc:   "should return a map with the given number of elements ignoring spaces",
-			accept: "gzip , deflate",
-			expL:   2, //nolint
+			desc:    "should return a map with the given number of elements ignoring spaces",
+			accepts: []string{"gzip , deflate"},
+			expL:    2, //nolint
+		},
+		{
+			desc:    "should return a map with the given number of elements in the given values",
+			accepts: []string{"gzip, deflate", "br"},
+			expL:    3, //nolint
 		},
 	}
 
@@ -40,7 +45,7 @@ func TestContentNegotiation(t *testing.T) {
 		t.Run(testCase.desc, func(t *testing.T) {
 			t.Parallel()
 
-			specs := parseContentNegotiation(testCase.accept)
+			specs := parseContentNegotiation(testCase.accepts)
 
 			assert.Equal(t, testCase.expL, len(specs))
 		})

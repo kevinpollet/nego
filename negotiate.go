@@ -2,40 +2,38 @@ package negotiate
 
 import "net/http"
 
-func ContentEncoding(req *http.Request, offers ...string) (string, error) {
-	acceptEncoding := req.Header.Get("Accept-Encoding")
-	acceptSpecs := parseContentNegotiation(acceptEncoding)
+type acceptEncoding map[string]float64
 
-	if len(acceptSpecs) == 0 {
-		return offers[0], nil
+func (a acceptEncoding) qvalue(contentCoding string) (qvalue float64, exists bool) {
+	if qvalue, exists = a[contentCoding]; !exists {
+		qvalue, exists = a["*"]
 	}
 
-	bestOffer := ""
-	bestQValue := 0.0
+	return
+}
 
-	for _, offer := range offers {
-		qvalue, exists := acceptSpecs[offer]
-		if !exists {
-			qvalue, exists = acceptSpecs["*"]
-		}
+func ContentEncoding(req *http.Request, offerEncodings ...string) string {
+	bestQvalue := 0.0
+	bestEncoding := ""
+	identity := "identity"
 
-		if exists && qvalue > bestQValue {
-			bestOffer = offer
-			bestQValue = qvalue
-		}
+	values := req.Header["Accept-Encoding"]
+	acceptEncodings := acceptEncoding(parseContentNegotiation(values))
+
+	if len(acceptEncodings) == 0 {
+		return identity
 	}
 
-	if bestOffer == "" {
-		qvalue, exists := acceptSpecs["identity"]
-		if !exists {
-			qvalue, exists = acceptSpecs["*"]
-		}
-
-		if !exists || qvalue > 0.0 {
-			bestOffer = "identity"
-			bestQValue = qvalue // nolint
+	for _, contentCoding := range offerEncodings {
+		if qvalue, exists := acceptEncodings.qvalue(contentCoding); exists && qvalue > bestQvalue {
+			bestEncoding = contentCoding
+			bestQvalue = qvalue
 		}
 	}
 
-	return bestOffer, nil
+	if qvalue, exists := acceptEncodings.qvalue(identity); bestEncoding == "" && (!exists || qvalue > 0.0) {
+		return identity
+	}
+
+	return bestEncoding
 }

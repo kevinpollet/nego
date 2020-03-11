@@ -8,17 +8,16 @@ import (
 // parseContentNegotiation parses and the value of a content negotiation header.
 // The following request headers are sent by a user agent to engage in proactive negotiation
 // of the response content: Accept, Accept-Charset, Accept-Encoding, Accept-Language.
-func parseContentNegotiation(value string) map[string]float64 {
-	if len(value) == 0 {
-		return nil
-	}
-
+func parseContentNegotiation(values []string) map[string]float64 {
 	accepts := make(map[string]float64)
-	specs := strings.Split(value, ",")
 
-	for _, spec := range specs {
-		name, qvalue := parseSpec(spec)
-		accepts[name] = qvalue
+	for _, value := range values {
+		specs := strings.Split(value, ",")
+
+		for _, spec := range specs {
+			name, qvalue := parseSpec(spec)
+			accepts[name] = qvalue
+		}
 	}
 
 	return accepts

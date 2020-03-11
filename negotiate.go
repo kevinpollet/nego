@@ -4,11 +4,7 @@ import "net/http"
 
 func ContentEncoding(req *http.Request, offers ...string) (string, error) {
 	acceptEncoding := req.Header.Get("Accept-Encoding")
-
-	acceptSpecs, err := parseAccept(acceptEncoding)
-	if err != nil {
-		return "", err
-	}
+	acceptSpecs := parseContentNegotiation(acceptEncoding)
 
 	if len(acceptSpecs) == 0 {
 		return offers[0], nil

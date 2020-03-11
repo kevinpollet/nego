@@ -6,41 +6,31 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParseAccept(t *testing.T) {
+func TestContentNegotiation(t *testing.T) {
 	testCases := []struct {
-		desc           string
-		accept         string
-		expectedResult map[string]float64
+		desc   string
+		accept string
+		expL   int
 	}{
 		{
-			desc:           "return an empty map if given value is empty",
-			accept:         "",
-			expectedResult: make(map[string]float64),
+			desc:   "should return an empty map if the given value is empty",
+			accept: "",
+			expL:   0,
 		},
 		{
-			desc:           "return a map with one element and qvalue initialized to 1.0 by default",
-			accept:         "gzip",
-			expectedResult: map[string]float64{"gzip": 1.0}, //nolint
+			desc:   "should return a map with one element",
+			accept: "gzip",
+			expL:   1, //nolint
 		},
 		{
-			desc:           "return a map with all element qvalues initialized to 1.0 by default",
-			accept:         "gzip, deflate, *",
-			expectedResult: map[string]float64{"gzip": 1.0, "deflate": 1.0, "*": 1.0}, //nolint
+			desc:   "should return a map with the given number of elements",
+			accept: "gzip,deflate",
+			expL:   2, //nolint
 		},
 		{
-			desc:           "return a map with with one element and qvalue initialized to the specified qvalue",
-			accept:         "gzip;q=0.2",
-			expectedResult: map[string]float64{"gzip": 0.2}, //nolint
-		},
-		{
-			desc:           "return a map with with all element qvalues initialized to the specified qvalue",
-			accept:         "gzip;q=0.2, *;q=0.0",
-			expectedResult: map[string]float64{"gzip": 0.2, "*": 0.0}, //nolint
-		},
-		{
-			desc:           "return a map with with all element qvalues initialized to the specified qvalue ignoring params",
-			accept:         "text/*, text/plain;format=flowed;q=0.8",
-			expectedResult: map[string]float64{"text/*": 1.0, "text/plain": 0.8}, //nolint
+			desc:   "should return a map with the given number of elements ignoring spaces",
+			accept: "gzip , deflate",
+			expL:   2, //nolint
 		},
 	}
 
@@ -50,10 +40,87 @@ func TestParseAccept(t *testing.T) {
 		t.Run(testCase.desc, func(t *testing.T) {
 			t.Parallel()
 
-			specs, err := parseAccept(testCase.accept)
+			specs := parseContentNegotiation(testCase.accept)
 
-			assert.NoError(t, err)
-			assert.Equal(t, testCase.expectedResult, specs)
+			assert.Equal(t, testCase.expL, len(specs))
+		})
+	}
+}
+
+func TestParseSpec(t *testing.T) {
+	testCases := []struct {
+		desc  string
+		value string
+		expN  string
+		expQ  float64
+	}{
+		{
+			desc:  "should return the parsed name with the default quality",
+			value: "test",
+			expN:  "test",
+			expQ:  1.0, // nolint
+		},
+		{
+			desc:  "should return the parsed name with the given quality",
+			value: "test;q=0.1",
+			expN:  "test",
+			expQ:  0.1, // nolint
+		},
+		{
+			desc:  "should return the parsed name with the given quality ignoring whitespaces",
+			value: "test ; q=0.1",
+			expN:  "test",
+			expQ:  0.1, // nolint
+		},
+		{
+			desc:  "should return the parsed name with the given quality ignoring extra params",
+			value: "test ; format=foo; q=0.1; format=bar",
+			expN:  "test",
+			expQ:  0.1, // nolint
+		},
+	}
+
+	for _, testCase := range testCases {
+		testCase := testCase
+
+		t.Run(testCase.desc, func(t *testing.T) {
+			t.Parallel()
+
+			name, quality := parseSpec(testCase.value)
+
+			assert.Equal(t, testCase.expN, name)
+			assert.Equal(t, testCase.expQ, quality)
+		})
+	}
+}
+
+func TestParseQuality(t *testing.T) {
+	testCases := []struct {
+		desc  string
+		value string
+		expQ  float64
+	}{
+		{
+			desc:  "should return the parsed value",
+			value: "1.0",
+			expQ:  1.0, // nolint
+		},
+		{
+			desc:  "should return -1 if the value cannot be parsed",
+			value: "aa",
+			expQ:  -1.0,
+		},
+	}
+
+	for _, testCase := range testCases {
+		testCase := testCase
+
+		t.Run(testCase.desc, func(t *testing.T) {
+			t.Parallel()
+
+			quality := parseQuality(testCase.value)
+
+			assert.Equal(t, testCase.expQ, quality)
 		})
 	}
 }

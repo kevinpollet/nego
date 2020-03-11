@@ -5,36 +5,47 @@ import (
 	"strings"
 )
 
-// parseAccept parses the header value of Accept* HTTP headers.
-func parseAccept(value string) (map[string]float64, error) {
+// parseContentNegotiation parses and the value of a content negotiation header.
+// The following request headers are sent by a user agent to engage in proactive negotiation
+// of the response content: Accept, Accept-Charset, Accept-Encoding, Accept-Language.
+func parseContentNegotiation(value string) map[string]float64 {
+	if len(value) == 0 {
+		return nil
+	}
+
 	accepts := make(map[string]float64)
 	specs := strings.Split(value, ",")
 
-	if len(specs) == 1 && specs[0] == "" {
-		return accepts, nil
-	}
-
 	for _, spec := range specs {
-		qvalue := 1.0
-		sSpec := strings.ReplaceAll(spec, " ", "")
-		tokens := strings.Split(sSpec, ";")
-
-		for _, param := range tokens[1:] {
-			qvStr := strings.TrimLeft(strings.ToLower(param), "q=")
-			if len(qvStr) != len(param) {
-				qv, err := strconv.ParseFloat(qvStr, 64)
-				if err != nil {
-					return nil, err
-				}
-
-				qvalue = qv
-
-				break
-			}
-		}
-
-		accepts[tokens[0]] = qvalue
+		name, qvalue := parseSpec(spec)
+		accepts[name] = qvalue
 	}
 
-	return accepts, nil
+	return accepts
+}
+
+func parseSpec(spec string) (string, float64) {
+	qvalue := 1.0
+	sToken := strings.ReplaceAll(spec, " ", "")
+	parts := strings.Split(sToken, ";")
+
+	for _, param := range parts[1:] {
+		lowerParam := strings.ToLower(param)
+		qvalueStr := strings.TrimPrefix(lowerParam, "q=")
+
+		if qvalueStr != lowerParam {
+			qvalue = parseQuality(qvalueStr)
+		}
+	}
+
+	return parts[0], qvalue
+}
+
+func parseQuality(value string) float64 {
+	float, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		return -1
+	}
+
+	return float
 }

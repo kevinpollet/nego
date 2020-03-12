@@ -4,8 +4,8 @@ import "net/http"
 
 type acceptEncoding map[string]float64
 
-func (a acceptEncoding) qvalue(contentCoding string) (qvalue float64, exists bool) {
-	if qvalue, exists = a[contentCoding]; !exists {
+func (a acceptEncoding) qvalue(encoding string) (qvalue float64, exists bool) {
+	if qvalue, exists = a[encoding]; !exists {
 		qvalue, exists = a["*"]
 	}
 
@@ -24,9 +24,9 @@ func ContentEncoding(req *http.Request, offerEncodings ...string) string {
 		return identity
 	}
 
-	for _, contentCoding := range offerEncodings {
-		if qvalue, exists := acceptEncodings.qvalue(contentCoding); exists && qvalue > bestQvalue {
-			bestEncoding = contentCoding
+	for _, encoding := range offerEncodings {
+		if qvalue, exists := acceptEncodings.qvalue(encoding); exists && qvalue > bestQvalue {
+			bestEncoding = encoding
 			bestQvalue = qvalue
 		}
 	}

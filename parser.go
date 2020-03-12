@@ -15,8 +15,10 @@ func parseContentNegotiation(values []string) map[string]float64 {
 		specs := strings.Split(value, ",")
 
 		for _, spec := range specs {
-			name, qvalue := parseSpec(spec)
-			accepts[name] = qvalue
+			if len(spec) > 0 { // rework
+				name, qvalue := parseSpec(spec)
+				accepts[name] = qvalue
+			}
 		}
 	}
 

@@ -4,22 +4,12 @@ import (
 	"net/http"
 )
 
-type acceptLanguage map[string]float64
-
-func (a acceptLanguage) qvalue(language string) (qvalue float64, exists bool) {
-	if qvalue, exists = a[language]; !exists {
-		qvalue, exists = a["*"]
-	}
-
-	return
-}
-
 // ContentLanguage returns the best offered language for the request's Accept-Language header.
 // If no offers are acceptable, then "" is returned.
 func ContentLanguage(req *http.Request, offerLanguages ...string) string {
 	bestQvalue := 0.0
 	bestLanguage := ""
-	acceptLanguages := acceptLanguage(parseAccept(req.Header, "Accept-Language"))
+	acceptLanguages := parseAccept(req.Header, "Accept-Language")
 
 	if len(acceptLanguages) == 0 {
 		return offerLanguages[0]

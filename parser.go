@@ -6,9 +6,19 @@ import (
 	"strings"
 )
 
+type accept map[string]float64
+
+func (a accept) qvalue(charset string) (qvalue float64, exists bool) {
+	if qvalue, exists = a[charset]; !exists {
+		qvalue, exists = a["*"]
+	}
+
+	return
+}
+
 // parseAccept parses the values of a content negotiation header. The following request headers are sent
 // by a user agent to engage in proactive negotiation: Accept, Accept-Charset, Accept-Encoding, Accept-Language.
-func parseAccept(header http.Header, key string) map[string]float64 {
+func parseAccept(header http.Header, key string) accept {
 	accepts := make(map[string]float64)
 
 	values, exists := header[key]

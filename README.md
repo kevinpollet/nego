@@ -8,8 +8,33 @@
 
 ## Install
 
-```
+```shell
 go get github.com/kevinpollet/negotiate
+```
+
+## Usage
+
+```go
+package main
+
+import (
+	"log"
+	"net/http"
+
+	"github.com/kevinpollet/negotiate"
+)
+
+func main() {
+	handler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		contentCharset := negotiate.ContentCharset(req, "UTF-8")
+		contentLanguage := negotiate.ContentLanguage(req, "en", "en-US")
+		contentEncoding := negotiate.ContentEncoding(req, "br", "gzip", "deflate")
+
+		rw.WriteHeader(http.StatusOK)
+	})
+
+	http.ListenAndServe(":8080", handler)
+}
 ```
 
 ## Contributing

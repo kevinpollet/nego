@@ -14,6 +14,7 @@ As defined in [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) the fo
 
 - [Install](#install)
 - [Usage](#usage)
+- [Examples](#examples)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -38,14 +39,27 @@ import (
 func main() {
 	handler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		contentCharset := negotiate.ContentCharset(req, "UTF-8")
-		contentLanguage := negotiate.ContentLanguage(req, "en", "en-US")
 		contentEncoding := negotiate.ContentEncoding(req, "br", "gzip", "deflate")
+		contentLanguage := negotiate.ContentLanguage(req, "en", "en-US")
 
 		rw.WriteHeader(http.StatusOK)
 	})
 
 	http.ListenAndServe(":8080", handler)
 }
+```
+
+## Examples
+
+The [examples](./Examples) directory contains an [example](./examples/main.go) which returns the content `charset`, `encoding` and `language` negotiated with the `Accept-Charset`, `Accept-Language` and `Accept-Encoding` headers present in the request.
+
+```shell
+$ go run examples/main.go
+$ curl localhost:8080 -H "Accept-Charset: utf-8, utf-16" -H "Accept-Language: fr;q=0.3, en" -H "Accept-Encoding: br, gzip"
+
+Content-Charset: utf-8
+Content-Encoding: gzip
+Content-Language: en
 ```
 
 ## Contributing

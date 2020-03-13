@@ -1,23 +1,29 @@
 package negotiate
 
 import (
+	"net/http"
 	"strconv"
 	"strings"
 )
 
 // parseAccept parses the values of a content negotiation header. The following request headers are sent
 // by a user agent to engage in proactive negotiation: Accept, Accept-Charset, Accept-Encoding, Accept-Language.
-func parseAccept(values []string) map[string]float64 {
+func parseAccept(header http.Header, key string) map[string]float64 {
 	accepts := make(map[string]float64)
 
-	for _, value := range values {
-		specs := strings.Split(value, ",")
+	values, exists := header[key]
+	if !exists {
+		return accepts
+	}
 
-		for _, spec := range specs {
-			if len(spec) > 0 { // rework
-				name, qvalue := parseSpec(spec)
-				accepts[name] = qvalue
-			}
+	for _, value := range values {
+		if len(value) == 0 {
+			continue
+		}
+
+		for _, spec := range strings.Split(value, ",") {
+			name, qvalue := parseSpec(spec)
+			accepts[name] = qvalue
 		}
 	}
 

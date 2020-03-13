@@ -17,9 +17,7 @@ func (a acceptCharset) qvalue(charset string) (qvalue float64, exists bool) {
 func Charset(req *http.Request, offerCharsets ...string) string {
 	bestQvalue := 0.0
 	bestCharset := ""
-
-	values := req.Header["Accept-Charset"]
-	acceptCharsets := acceptCharset(parseAccept(values))
+	acceptCharsets := acceptCharset(parseAccept(req.Header, "Accept-Charset"))
 
 	if len(acceptCharsets) == 0 {
 		return offerCharsets[0]

@@ -1,6 +1,7 @@
 package negotiate
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,33 +10,33 @@ import (
 func TestParseAccept(t *testing.T) {
 	testCases := []struct {
 		desc    string
-		accepts []string
-		expL    int
+		accepts string
+		expLen  int
 	}{
 		{
 			desc:    "should return an empty map if the given values are empty",
-			accepts: []string{},
-			expL:    0,
+			accepts: "",
+			expLen:  0,
 		},
 		{
 			desc:    "should return a map with one element",
-			accepts: []string{"gzip"},
-			expL:    1, //nolint
+			accepts: "gzip",
+			expLen:  1, //nolint
 		},
 		{
 			desc:    "should return a map with the given number of elements",
-			accepts: []string{"gzip,deflate"},
-			expL:    2, //nolint
+			accepts: "gzip,deflate",
+			expLen:  2, //nolint
 		},
 		{
 			desc:    "should return a map with the given number of elements ignoring spaces",
-			accepts: []string{"gzip , deflate"},
-			expL:    2, //nolint
+			accepts: "gzip , deflate",
+			expLen:  2, //nolint
 		},
 		{
 			desc:    "should return a map with the given number of elements in the given values",
-			accepts: []string{"gzip, deflate", "br"},
-			expL:    3, //nolint
+			accepts: "gzip, deflate, br",
+			expLen:  3, //nolint
 		},
 	}
 
@@ -45,9 +46,12 @@ func TestParseAccept(t *testing.T) {
 		t.Run(testCase.desc, func(t *testing.T) {
 			t.Parallel()
 
-			specs := parseAccept(testCase.accepts)
+			header := make(http.Header)
+			header.Add("Accept", testCase.accepts)
 
-			assert.Equal(t, testCase.expL, len(specs))
+			specs := parseAccept(header, "Accept")
+
+			assert.Equal(t, testCase.expLen, len(specs))
 		})
 	}
 }

@@ -17,16 +17,14 @@ func (a acceptLanguage) qvalue(language string) (qvalue float64, exists bool) {
 func Language(req *http.Request, offerLanguages ...string) string {
 	bestQvalue := 0.0
 	bestLanguage := ""
+	acceptLanguages := acceptLanguage(parseAccept(req.Header, "Accept-Language"))
 
-	values := req.Header["Accept-Language"]
-	acceptCharsets := acceptLanguage(parseAccept(values))
-
-	if len(acceptCharsets) == 0 {
+	if len(acceptLanguages) == 0 {
 		return offerLanguages[0]
 	}
 
 	for _, language := range offerLanguages {
-		if qvalue, exists := acceptCharsets.qvalue(language); exists && qvalue > bestQvalue {
+		if qvalue, exists := acceptLanguages.qvalue(language); exists && qvalue > bestQvalue {
 			bestLanguage = language
 			bestQvalue = qvalue
 		}

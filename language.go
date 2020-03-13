@@ -14,6 +14,8 @@ func (a acceptLanguage) qvalue(language string) (qvalue float64, exists bool) {
 	return
 }
 
+// ContentLanguage returns the best offered language for the request's Accept-Language header.
+// If no offers are acceptable, then "" is returned.
 func ContentLanguage(req *http.Request, offerLanguages ...string) string {
 	bestQvalue := 0.0
 	bestLanguage := ""

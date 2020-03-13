@@ -12,6 +12,8 @@ func (a acceptEncoding) qvalue(encoding string) (qvalue float64, exists bool) {
 	return
 }
 
+// ContentEncoding returns the best offered charset for the request's Accept-Encoding header.
+// If no offers are acceptable, then identity encoding is returned or "" if it is explicitly excluded.
 func ContentEncoding(req *http.Request, offerEncodings ...string) string {
 	bestQvalue := 0.0
 	bestEncoding := ""

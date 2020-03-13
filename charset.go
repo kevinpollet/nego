@@ -14,6 +14,8 @@ func (a acceptCharset) qvalue(charset string) (qvalue float64, exists bool) {
 	return
 }
 
+// ContentCharset returns the best offered charset for the request's Accept-Charset header.
+// If no offers are acceptable, then "" is returned.
 func ContentCharset(req *http.Request, offerCharsets ...string) string {
 	bestQvalue := 0.0
 	bestCharset := ""

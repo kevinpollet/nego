@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLanguage(t *testing.T) {
+func TestContentLanguage(t *testing.T) {
 	testCases := []struct {
 		desc           string
 		offerLanguages []string
@@ -50,7 +50,7 @@ func TestLanguage(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
 			req.Header.Add("Accept-Language", testCase.acceptLanguage)
 
-			language := Language(req, testCase.offerLanguages...)
+			language := ContentLanguage(req, testCase.offerLanguages...)
 
 			assert.Equal(t, testCase.expLanguage, language)
 		})

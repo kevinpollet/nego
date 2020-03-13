@@ -14,7 +14,7 @@ func (a acceptCharset) qvalue(charset string) (qvalue float64, exists bool) {
 	return
 }
 
-func Charset(req *http.Request, offerCharsets ...string) string {
+func ContentCharset(req *http.Request, offerCharsets ...string) string {
 	bestQvalue := 0.0
 	bestCharset := ""
 	acceptCharsets := acceptCharset(parseAccept(req.Header, "Accept-Charset"))

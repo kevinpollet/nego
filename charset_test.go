@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCharset(t *testing.T) {
+func TestContentCharset(t *testing.T) {
 	testCases := []struct {
 		desc          string
 		offerCharsets []string
@@ -50,7 +50,7 @@ func TestCharset(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
 			req.Header.Add("Accept-Charset", testCase.acceptCharset)
 
-			charset := Charset(req, testCase.offerCharsets...)
+			charset := ContentCharset(req, testCase.offerCharsets...)
 
 			assert.Equal(t, testCase.expCharset, charset)
 		})

@@ -14,7 +14,7 @@ func (a acceptLanguage) qvalue(language string) (qvalue float64, exists bool) {
 	return
 }
 
-func Language(req *http.Request, offerLanguages ...string) string {
+func ContentLanguage(req *http.Request, offerLanguages ...string) string {
 	bestQvalue := 0.0
 	bestLanguage := ""
 	acceptLanguages := acceptLanguage(parseAccept(req.Header, "Accept-Language"))

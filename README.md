@@ -1,4 +1,4 @@
-# negotiate
+# negotiate <!-- omit in toc -->
 
 [![Build Status](https://github.com/kevinpollet/negotiate/workflows/build/badge.svg)](https://github.com/kevinpollet/negotiate/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kevinpollet/negotiate?burst=)](https://goreportcard.com/report/github.com/kevinpollet/negotiate)
@@ -9,6 +9,13 @@
 Package `negotiate` provides an [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) compliant implementation of [HTTP Content Negotiation](https://en.wikipedia.org/wiki/Content_negotiation).
 
 As defined in [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) the following request headers are sent by a user agent to engage in proactive negotiation of the response content: `Accept`, `Accept-Charset`, `Accept-Language` and `Accept-Encoding`. This package provides convenient functions to negotiate the best and acceptable response content `type`, `charset`, `language` and `encoding` that should be returned by the `HTTP` server.
+
+## Table of Contents <!-- omit in toc -->
+
+- [Install](#install)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Install
 

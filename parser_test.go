@@ -49,7 +49,7 @@ func TestParseAccept(t *testing.T) {
 			header := make(http.Header)
 			header.Add("Accept", testCase.accepts)
 
-			specs := parseAccept(header, "Accept")
+			specs, _ := parseAccept(header, "Accept")
 
 			assert.Equal(t, testCase.expLen, len(specs))
 		})

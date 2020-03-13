@@ -48,7 +48,10 @@ func TestContentCharset(t *testing.T) {
 			t.Parallel()
 
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
-			req.Header.Add("Accept-Charset", testCase.acceptCharset)
+
+			if len(testCase.acceptCharset) > 0 {
+				req.Header.Add("Accept-Charset", testCase.acceptCharset)
+			}
 
 			charset := ContentCharset(req, testCase.offerCharsets...)
 

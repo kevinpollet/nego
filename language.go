@@ -9,15 +9,15 @@ import (
 func ContentLanguage(req *http.Request, offerLanguages ...string) string {
 	bestQvalue := 0.0
 	bestLanguage := ""
-	acceptLanguages := parseAccept(req.Header, "Accept-Language")
 
-	if len(acceptLanguages) == 0 {
+	acceptLanguages, exists := parseAccept(req.Header, "Accept-Language")
+	if !exists && len(offerLanguages) > 0 {
 		return offerLanguages[0]
 	}
 
-	for _, language := range offerLanguages {
-		if qvalue, exists := acceptLanguages.qvalue(language); exists && qvalue > bestQvalue {
-			bestLanguage = language
+	for _, offer := range offerLanguages {
+		if qvalue, exists := acceptLanguages.qvalue(offer); exists && qvalue > bestQvalue {
+			bestLanguage = offer
 			bestQvalue = qvalue
 		}
 	}

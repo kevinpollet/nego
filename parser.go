@@ -18,13 +18,9 @@ func (a accept) qvalue(charset string) (qvalue float64, exists bool) {
 
 // parseAccept parses the values of a content negotiation header. The following request headers are sent
 // by a user agent to engage in proactive negotiation: Accept, Accept-Charset, Accept-Encoding, Accept-Language.
-func parseAccept(header http.Header, key string) accept {
-	accepts := make(map[string]float64)
-
+func parseAccept(header http.Header, key string) (accept, bool) {
 	values, exists := header[key]
-	if !exists {
-		return accepts
-	}
+	accepts := make(map[string]float64)
 
 	for _, value := range values {
 		if len(value) == 0 {
@@ -37,7 +33,7 @@ func parseAccept(header http.Header, key string) accept {
 		}
 	}
 
-	return accepts
+	return accepts, exists
 }
 
 func parseSpec(spec string) (string, float64) {

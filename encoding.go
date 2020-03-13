@@ -9,15 +9,15 @@ const encodingIdentity = "identity"
 func ContentEncoding(req *http.Request, offerEncodings ...string) string {
 	bestQvalue := 0.0
 	bestEncoding := ""
-	acceptEncodings := parseAccept(req.Header, "Accept-Encoding")
 
-	if len(acceptEncodings) == 0 {
-		return encodingIdentity
+	acceptEncodings, exists := parseAccept(req.Header, "Accept-Encoding")
+	if !exists && len(offerEncodings) > 0 {
+		return offerEncodings[0]
 	}
 
-	for _, encoding := range offerEncodings {
-		if qvalue, exists := acceptEncodings.qvalue(encoding); exists && qvalue > bestQvalue {
-			bestEncoding = encoding
+	for _, offer := range offerEncodings {
+		if qvalue, exists := acceptEncodings.qvalue(offer); exists && qvalue > bestQvalue {
+			bestEncoding = offer
 			bestQvalue = qvalue
 		}
 	}

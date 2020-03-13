@@ -48,7 +48,10 @@ func TestContentLanguage(t *testing.T) {
 			t.Parallel()
 
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
-			req.Header.Add("Accept-Language", testCase.acceptLanguage)
+
+			if len(testCase.acceptLanguage) > 0 {
+				req.Header.Add("Accept-Language", testCase.acceptLanguage)
+			}
 
 			language := ContentLanguage(req, testCase.offerLanguages...)
 

@@ -5,10 +5,9 @@ import (
 	"strings"
 )
 
-// parseContentNegotiation parses and the value of a content negotiation header.
-// The following request headers are sent by a user agent to engage in proactive negotiation
-// of the response content: Accept, Accept-Charset, Accept-Encoding, Accept-Language.
-func parseContentNegotiation(values []string) map[string]float64 {
+// parseAccept parses the values of a content negotiation header. The following request headers are sent
+// by a user agent to engage in proactive negotiation: Accept, Accept-Charset, Accept-Encoding, Accept-Language.
+func parseAccept(values []string) map[string]float64 {
 	accepts := make(map[string]float64)
 
 	for _, value := range values {

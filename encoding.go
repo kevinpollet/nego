@@ -18,7 +18,7 @@ func ContentEncoding(req *http.Request, offerEncodings ...string) string {
 	identity := "identity"
 
 	values := req.Header["Accept-Encoding"]
-	acceptEncodings := acceptEncoding(parseContentNegotiation(values))
+	acceptEncodings := acceptEncoding(parseAccept(values))
 
 	if len(acceptEncodings) == 0 {
 		return identity

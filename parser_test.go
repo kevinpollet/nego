@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestContentNegotiation(t *testing.T) {
+func TestParseAccept(t *testing.T) {
 	testCases := []struct {
 		desc    string
 		accepts []string
@@ -45,7 +45,7 @@ func TestContentNegotiation(t *testing.T) {
 		t.Run(testCase.desc, func(t *testing.T) {
 			t.Parallel()
 
-			specs := parseContentNegotiation(testCase.accepts)
+			specs := parseAccept(testCase.accepts)
 
 			assert.Equal(t, testCase.expL, len(specs))
 		})

@@ -19,7 +19,7 @@ func Language(req *http.Request, offerLanguages ...string) string {
 	bestLanguage := ""
 
 	values := req.Header["Accept-Language"]
-	acceptCharsets := acceptLanguage(parseContentNegotiation(values))
+	acceptCharsets := acceptLanguage(parseAccept(values))
 
 	if len(acceptCharsets) == 0 {
 		return offerLanguages[0]

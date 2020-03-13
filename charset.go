@@ -19,7 +19,7 @@ func Charset(req *http.Request, offerCharsets ...string) string {
 	bestCharset := ""
 
 	values := req.Header["Accept-Charset"]
-	acceptCharsets := acceptCharset(parseContentNegotiation(values))
+	acceptCharsets := acceptCharset(parseAccept(values))
 
 	if len(acceptCharsets) == 0 {
 		return offerCharsets[0]

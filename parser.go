@@ -8,12 +8,27 @@ import (
 
 type accept map[string]float64
 
-func (a accept) qvalue(charset string) (qvalue float64, exists bool) {
-	if qvalue, exists = a[charset]; !exists {
-		qvalue, exists = a["*"]
+func (a accept) qvalue(offer string) (float64, bool) {
+	if qvalue, exists := a[offer]; exists {
+		return qvalue, exists
 	}
 
-	return
+	if !strings.Contains(offer, "/") {
+		qvalue, exists := a["*"]
+		return qvalue, exists
+	}
+
+	slashIndex := strings.Index(offer, "/")
+
+	if qvalue, exists := a[offer[:slashIndex]+"/*"]; exists {
+		return qvalue, exists
+	}
+
+	if qvalue, exists := a["*/*"]; exists {
+		return qvalue, exists
+	}
+
+	return 0.0, false // nolint
 }
 
 // parseAccept parses the values of a content negotiation header. The following request headers are sent

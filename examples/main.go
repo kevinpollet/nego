@@ -14,11 +14,14 @@ func main() {
 		contentCharset := negotiate.ContentCharset(req, "UTF-8")
 		contentEncoding := negotiate.ContentEncoding(req, "gzip", "deflate")
 		contentLanguage := negotiate.ContentLanguage(req, "fr", "en")
+		contentType := negotiate.ContentType(req, "text/html", "text/plain")
 
 		rw.WriteHeader(http.StatusOK)
+
 		io.WriteString(rw, fmt.Sprintln("Content-Charset:", contentCharset))   // nolint
 		io.WriteString(rw, fmt.Sprintln("Content-Encoding:", contentEncoding)) // nolint
 		io.WriteString(rw, fmt.Sprintln("Content-Language:", contentLanguage)) // nolint
+		io.WriteString(rw, fmt.Sprintln("Content-Type:", contentType))         // nolint
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", negotiateHandler))

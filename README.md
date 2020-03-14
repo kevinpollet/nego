@@ -41,6 +41,7 @@ func main() {
 		contentCharset := negotiate.ContentCharset(req, "UTF-8")
 		contentEncoding := negotiate.ContentEncoding(req, "br", "gzip", "deflate")
 		contentLanguage := negotiate.ContentLanguage(req, "en", "en-US")
+		contentType := negotiate.ContentType(req, "text/html", "text/plain")
 
 		rw.WriteHeader(http.StatusOK)
 	})

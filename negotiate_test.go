@@ -8,36 +8,42 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNegotiateContentCharset(t *testing.T) { // nolint
+func TestNegotiateContentCharset(t *testing.T) {
 	testCases := []struct {
-		desc          string
-		offerCharsets []string
-		acceptCharset string
-		expCharset    string
+		desc       string
+		offers     []string
+		accept     string
+		expCharset string
 	}{
 		{
-			desc:          "first charset offer is acceptable if given request has no Accept-Charset header",
-			offerCharsets: []string{"UTF-8", "UTF-16"},
-			acceptCharset: "",
-			expCharset:    "UTF-8",
+			desc:       "should return the first offer if the request has no Accept-Charset header",
+			offers:     []string{"utf-8"},
+			accept:     "",
+			expCharset: "utf-8",
 		},
 		{
-			desc:          "no charset offer is acceptable if charset offers are not listed",
-			offerCharsets: []string{"UTF-8", "UTF-16"},
-			acceptCharset: "ISO-8859-5",
-			expCharset:    "",
+			desc:       "should return an empty string if no offer is acceptable",
+			offers:     []string{"utf-8"},
+			accept:     "utf-16",
+			expCharset: "",
 		},
 		{
-			desc:          "no charset offer is acceptable if charset offers are excluded",
-			offerCharsets: []string{"UTF-8", "UTF-16"},
-			acceptCharset: "UTF-8;q=0, UTF-16;q=0",
-			expCharset:    "",
+			desc:       "should return an empty string if the offer is explicitly discared",
+			offers:     []string{"utf-8"},
+			accept:     "utf-8;q=0",
+			expCharset: "",
 		},
 		{
-			desc:          "charset offer with best quality is acceptable if multiple charset offers are acceptable",
-			offerCharsets: []string{"UTF-8", "UTF-16"},
-			acceptCharset: "UTF-8;q=0.2, UTF-16;q=0.8",
-			expCharset:    "UTF-16",
+			desc:       "should return an empty string if no offer is defined",
+			offers:     []string{},
+			accept:     "utf-8",
+			expCharset: "",
+		},
+		{
+			desc:       "should return the acceptable offer with the best qvalue if multiple offers are acceptable",
+			offers:     []string{"utf-8", "utf-16"},
+			accept:     "utf-8;q=0.8, utf-16",
+			expCharset: "utf-16",
 		},
 	}
 
@@ -49,154 +55,129 @@ func TestNegotiateContentCharset(t *testing.T) { // nolint
 
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
 
-			if len(testCase.acceptCharset) > 0 {
-				req.Header.Add("Accept-Charset", testCase.acceptCharset)
+			if len(testCase.accept) > 0 {
+				req.Header.Add("Accept-Charset", testCase.accept)
 			}
 
-			charset := NegotiateContentCharset(req, testCase.offerCharsets...)
+			contentCharset := NegotiateContentCharset(req, testCase.offers...)
 
-			assert.Equal(t, testCase.expCharset, charset)
+			assert.Equal(t, testCase.expCharset, contentCharset)
 		})
 	}
 }
 
-func TestNegotiateContentEncoding(t *testing.T) {
-	testCases := []struct {
-		desc           string
-		offerEncodings []string
-		acceptEncoding string
-		expEncoding    string
-	}{
-		{
-			desc:           "identity is acceptable if request has no Accept-Encoding header",
-			offerEncodings: []string{"gzip", "deflate"},
-			acceptEncoding: "",
-			expEncoding:    "identity",
-		},
-		{
-			desc:           "identity is acceptable if the representation has no content-coding",
-			offerEncodings: []string{},
-			acceptEncoding: "gzip, deflate, br",
-			expEncoding:    "identity",
-		},
-		{
-			desc:           "identity is not acceptable if the representation has no content-coding and it is excluded",
-			offerEncodings: []string{},
-			acceptEncoding: "identity;q=0.0",
-			expEncoding:    "",
-		},
-		{
-			desc:           "identity is not acceptable if the representation has no content-coding and it is excluded",
-			offerEncodings: []string{},
-			acceptEncoding: "*;q=0.0",
-			expEncoding:    "",
-		},
-		{
-			desc:           "content-coding with highest qvalue is preferred if multiple content-codings are acceptable",
-			offerEncodings: []string{"gzip", "deflate"},
-			acceptEncoding: "gzip;q=0.8, deflate",
-			expEncoding:    "deflate",
-		},
-	}
-
-	for _, testCase := range testCases {
-		testCase := testCase
-
-		t.Run(testCase.desc, func(t *testing.T) {
-			t.Parallel()
-
-			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
-			req.Header.Add("Accept-Encoding", testCase.acceptEncoding)
-
-			encoding := NegotiateContentEncoding(req, testCase.offerEncodings...)
-
-			assert.Equal(t, testCase.expEncoding, encoding)
-		})
-	}
-}
-
-func TestNegotiateContentLanguage(t *testing.T) { // nolint
-	testCases := []struct {
-		desc           string
-		offerLanguages []string
-		acceptLanguage string
-		expLanguage    string
-	}{
-		{
-			desc:           "first language offer is acceptable if given request has no Accept-Language header",
-			offerLanguages: []string{"en", "en-US"},
-			acceptLanguage: "",
-			expLanguage:    "en",
-		},
-		{
-			desc:           "no language offer is acceptable if language offers are not listed",
-			offerLanguages: []string{"en", "en-US"},
-			acceptLanguage: "fr",
-			expLanguage:    "",
-		},
-		{
-			desc:           "no language offer is acceptable if language offers are excluded",
-			offerLanguages: []string{"en", "en-US"},
-			acceptLanguage: "en;q=0, en-US;q=0",
-			expLanguage:    "",
-		},
-		{
-			desc:           "language offer with best quality is acceptable if multiple language offers are acceptable",
-			offerLanguages: []string{"en", "en-US"},
-			acceptLanguage: "en;q=0.2, en-US;q=0.8",
-			expLanguage:    "en-US",
-		},
-	}
-
-	for _, testCase := range testCases {
-		testCase := testCase
-
-		t.Run(testCase.desc, func(t *testing.T) {
-			t.Parallel()
-
-			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
-
-			if len(testCase.acceptLanguage) > 0 {
-				req.Header.Add("Accept-Language", testCase.acceptLanguage)
-			}
-
-			language := NegotiateContentLanguage(req, testCase.offerLanguages...)
-
-			assert.Equal(t, testCase.expLanguage, language)
-		})
-	}
-}
-
-func TestNegotiateContentType(t *testing.T) {
+func TestNegotiateContentEncoding(t *testing.T) { //nolint
 	testCases := []struct {
 		desc        string
-		offerTypes  []string
-		acceptType  string
+		offers      []string
+		accept      string
+		expEncoding string
+	}{
+		{
+			desc:        "should return the first offer if the request has no Accept-Encoding header",
+			offers:      []string{"gzip", "deflate"},
+			accept:      "",
+			expEncoding: "gzip",
+		},
+		{
+			desc:        "should return identity if no offer is defined",
+			offers:      []string{},
+			accept:      "",
+			expEncoding: "identity",
+		},
+		{
+			desc:        "should return identity if no offer is acceptable",
+			offers:      []string{"gzip", "br"},
+			accept:      "deflate",
+			expEncoding: "identity",
+		},
+		{
+			desc:        "should return identity if the request has an empty Accept-Encoding header",
+			offers:      []string{"gzip", "br"},
+			accept:      " ",
+			expEncoding: "identity",
+		},
+		{
+			desc:        "should return an empty string if no offer is defined and identity is explicitly discared",
+			offers:      []string{},
+			accept:      "identity;q=0",
+			expEncoding: "",
+		},
+		{
+			desc:        "should return an empty string if no offer is defined and identity is discared",
+			offers:      []string{},
+			accept:      "*;q=0",
+			expEncoding: "",
+		},
+		{
+			desc:        "should return the acceptable offer",
+			offers:      []string{"gzip", "br"},
+			accept:      "br",
+			expEncoding: "br",
+		},
+		{
+			desc:        "should return the acceptable offer with the best qvalue if multiple offers are acceptable",
+			offers:      []string{"gzip", "br"},
+			accept:      "br;q=0.5, gzip",
+			expEncoding: "gzip",
+		},
+	}
+
+	for _, testCase := range testCases {
+		testCase := testCase
+
+		t.Run(testCase.desc, func(t *testing.T) {
+			t.Parallel()
+
+			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
+
+			if len(testCase.accept) > 0 {
+				req.Header.Add("Accept-Encoding", testCase.accept)
+			}
+
+			contentEncoding := NegotiateContentEncoding(req, testCase.offers...)
+
+			assert.Equal(t, testCase.expEncoding, contentEncoding)
+		})
+	}
+}
+
+func TestNegotiateContentLanguage(t *testing.T) {
+	testCases := []struct {
+		desc        string
+		offers      []string
+		accept      string
 		expLanguage string
 	}{
 		{
-			desc:        "first media type offer is acceptable if given request has no Accept header",
-			offerTypes:  []string{"text/html"},
-			acceptType:  "",
-			expLanguage: "text/html",
+			desc:        "should return the first offer if request has no Accept-Language header",
+			offers:      []string{"en", "en-us"},
+			accept:      "",
+			expLanguage: "en",
 		},
 		{
-			desc:        "media type offer with the most specific reference has precedence",
-			offerTypes:  []string{"text/html", "text/plain"},
-			acceptType:  "text/html;q=0.2, text/*",
-			expLanguage: "text/plain",
-		},
-		{
-			desc:        "no media type offer is acceptable if they are not listed",
-			offerTypes:  []string{"image/jpg"},
-			acceptType:  "text/html;q=0.2, text/*",
+			desc:        "should return an empty string if no offers is acceptable",
+			offers:      []string{"en", "en-us"},
+			accept:      "fr",
 			expLanguage: "",
 		},
 		{
-			desc:        "no media type offer is acceptable if they are explicitly excluded",
-			offerTypes:  []string{"image/jpg"},
-			acceptType:  "image/jpg;q=0.0, text/*",
+			desc:        "should return an empty string if an offer is explicitly discared",
+			offers:      []string{"en", "en-us"},
+			accept:      "en;q=0",
 			expLanguage: "",
+		},
+		{
+			desc:        "should return an empty string if no offer is defined",
+			offers:      []string{},
+			accept:      "en",
+			expLanguage: "",
+		},
+		{
+			desc:        "should return the acceptable offer with the best qvalue if multiple offers are acceptable",
+			offers:      []string{"en", "en-us"},
+			accept:      "en;q=0.8, en-us",
+			expLanguage: "en-us",
 		},
 	}
 
@@ -208,13 +189,89 @@ func TestNegotiateContentType(t *testing.T) {
 
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
 
-			if len(testCase.acceptType) > 0 {
-				req.Header.Add("Accept", testCase.acceptType)
+			if len(testCase.accept) > 0 {
+				req.Header.Add("Accept-Language", testCase.accept)
 			}
 
-			mediaType := NegotiateContentType(req, testCase.offerTypes...)
+			contentLanguage := NegotiateContentLanguage(req, testCase.offers...)
 
-			assert.Equal(t, testCase.expLanguage, mediaType)
+			assert.Equal(t, testCase.expLanguage, contentLanguage)
+		})
+	}
+}
+
+func TestNegotiateContentType(t *testing.T) { // nolint
+	testCases := []struct {
+		desc         string
+		offers       []string
+		accept       string
+		expMediaType string
+	}{
+		{
+			desc:         "should return the first offer if the request has no Accept header",
+			offers:       []string{"text/html"},
+			accept:       "",
+			expMediaType: "text/html",
+		},
+		{
+			desc:         "should return an empty string if no offer is acceptable",
+			offers:       []string{"text/html", "text/plain"},
+			accept:       "application/json",
+			expMediaType: "",
+		},
+		{
+			desc:         "should return an empty string if no offer is acceptable",
+			offers:       []string{"text/html", "text/plain"},
+			accept:       "application/json",
+			expMediaType: "",
+		},
+		{
+			desc:         "should return an empty string if offer is explicitly discared",
+			offers:       []string{"text/html"},
+			accept:       "text/html;q=0",
+			expMediaType: "",
+		},
+		{
+			desc:         "should return an empty string if offer is discared",
+			offers:       []string{"text/html"},
+			accept:       "text/*;q=0",
+			expMediaType: "",
+		},
+		{
+			desc:         "should return an empty string if no offer is defined",
+			offers:       []string{},
+			accept:       "application/json",
+			expMediaType: "",
+		},
+		{
+			desc:         "should return the acceptable offer with the best qvalue if multiple offers are acceptable",
+			offers:       []string{"text/html", "text/plain"},
+			accept:       "text/html;q=0.8, text/plain",
+			expMediaType: "text/plain",
+		},
+		// {
+		// 	desc:         "should return the most specific acceptable offer if multiple offers are acceptable",
+		// 	offers:       []string{"text/html", "text/plain"},
+		// 	accept:       "text/plain, text/*",
+		// 	expMediaType: "text/plain",
+		// },
+	}
+
+	for _, testCase := range testCases {
+		testCase := testCase
+
+		t.Run(testCase.desc, func(t *testing.T) {
+			t.Parallel()
+
+			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
+
+			if len(testCase.accept) > 0 {
+				req.Header.Add("Accept", testCase.accept)
+			}
+
+			contentType := NegotiateContentType(req, testCase.offers...)
+
+			assert.Equal(t, testCase.expMediaType, contentType)
 		})
 	}
 }

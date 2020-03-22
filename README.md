@@ -37,10 +37,10 @@ import (
 
 func main() {
 	handler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		contentCharset := nego.ContentCharset(req, "utf-8")
-		contentEncoding := nego.ContentEncoding(req, "gzip", "deflate")
-		contentLanguage := nego.ContentLanguage(req, "fr", "en")
-		contentType := nego.ContentType(req, "text/html", "text/plain")
+		contentCharset := nego.NegotiateContentCharset(req, "utf-8")
+		contentEncoding := nego.NegotiateContentEncoding(req, "gzip", "deflate")
+		contentLanguage := nego.NegotiateContentLanguage(req, "fr", "en")
+		contentType := nego.NegotiateContentType(req, "text/html", "text/plain")
 		...
 	})
 }

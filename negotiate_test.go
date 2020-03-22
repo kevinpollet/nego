@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestContentCharset(t *testing.T) { // nolint
+func TestNegotiateContentCharset(t *testing.T) { // nolint
 	testCases := []struct {
 		desc          string
 		offerCharsets []string
@@ -53,14 +53,14 @@ func TestContentCharset(t *testing.T) { // nolint
 				req.Header.Add("Accept-Charset", testCase.acceptCharset)
 			}
 
-			charset := ContentCharset(req, testCase.offerCharsets...)
+			charset := NegotiateContentCharset(req, testCase.offerCharsets...)
 
 			assert.Equal(t, testCase.expCharset, charset)
 		})
 	}
 }
 
-func TestContentEncoding(t *testing.T) {
+func TestNegotiateContentEncoding(t *testing.T) {
 	testCases := []struct {
 		desc           string
 		offerEncodings []string
@@ -108,14 +108,14 @@ func TestContentEncoding(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
 			req.Header.Add("Accept-Encoding", testCase.acceptEncoding)
 
-			encoding := ContentEncoding(req, testCase.offerEncodings...)
+			encoding := NegotiateContentEncoding(req, testCase.offerEncodings...)
 
 			assert.Equal(t, testCase.expEncoding, encoding)
 		})
 	}
 }
 
-func TestContentLanguage(t *testing.T) { // nolint
+func TestNegotiateContentLanguage(t *testing.T) { // nolint
 	testCases := []struct {
 		desc           string
 		offerLanguages []string
@@ -160,14 +160,14 @@ func TestContentLanguage(t *testing.T) { // nolint
 				req.Header.Add("Accept-Language", testCase.acceptLanguage)
 			}
 
-			language := ContentLanguage(req, testCase.offerLanguages...)
+			language := NegotiateContentLanguage(req, testCase.offerLanguages...)
 
 			assert.Equal(t, testCase.expLanguage, language)
 		})
 	}
 }
 
-func TestContentType(t *testing.T) {
+func TestNegotiateContentType(t *testing.T) {
 	testCases := []struct {
 		desc        string
 		offerTypes  []string
@@ -212,7 +212,7 @@ func TestContentType(t *testing.T) {
 				req.Header.Add("Accept", testCase.acceptType)
 			}
 
-			mediaType := ContentType(req, testCase.offerTypes...)
+			mediaType := NegotiateContentType(req, testCase.offerTypes...)
 
 			assert.Equal(t, testCase.expLanguage, mediaType)
 		})

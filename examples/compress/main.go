@@ -21,7 +21,7 @@ func (w *compressResponseWriter) Write(p []byte) (n int, err error) {
 func main() {
 	compressHandler := func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-			contentEncoding := nego.ContentEncoding(req, "gzip")
+			contentEncoding := nego.NegotiateContentEncoding(req, "gzip")
 
 			if contentEncoding == "" {
 				rw.WriteHeader(http.StatusNotAcceptable)

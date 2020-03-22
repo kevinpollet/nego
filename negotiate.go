@@ -4,9 +4,9 @@ import "net/http"
 
 const encodingIdentity = "identity"
 
-// ContentCharset returns the best offered charset for the request's Accept-Charset header.
+// NegotiateContentCharset returns the best offered charset for the request's Accept-Charset header.
 // If no offers are acceptable, then "" is returned.
-func ContentCharset(req *http.Request, offerCharsets ...string) string {
+func NegotiateContentCharset(req *http.Request, offerCharsets ...string) string {
 	bestQvalue := 0.0
 	bestCharset := ""
 
@@ -25,9 +25,9 @@ func ContentCharset(req *http.Request, offerCharsets ...string) string {
 	return bestCharset
 }
 
-// ContentEncoding returns the best offered charset for the request's Accept-Encoding header.
+// NegotiateContentEncoding returns the best offered charset for the request's Accept-Encoding header.
 // If no offers are acceptable, then identity encoding is returned or "" if it is explicitly excluded.
-func ContentEncoding(req *http.Request, offerEncodings ...string) string {
+func NegotiateContentEncoding(req *http.Request, offerEncodings ...string) string {
 	bestQvalue := 0.0
 	bestEncoding := ""
 
@@ -50,9 +50,9 @@ func ContentEncoding(req *http.Request, offerEncodings ...string) string {
 	return bestEncoding
 }
 
-// ContentLanguage returns the best offered language for the request's Accept-Language header.
+// NegotiateContentLanguage returns the best offered language for the request's Accept-Language header.
 // If no offers are acceptable, then "" is returned.
-func ContentLanguage(req *http.Request, offerLanguages ...string) string {
+func NegotiateContentLanguage(req *http.Request, offerLanguages ...string) string {
 	bestQvalue := 0.0
 	bestLanguage := ""
 
@@ -73,7 +73,7 @@ func ContentLanguage(req *http.Request, offerLanguages ...string) string {
 
 // ContentType returns the best offered language for the request's Accept header.
 // If no offers are acceptable, then "" is returned.
-func ContentType(req *http.Request, offerTypes ...string) string {
+func NegotiateContentType(req *http.Request, offerTypes ...string) string {
 	bestType := ""
 	bestQvalue := 0.0
 

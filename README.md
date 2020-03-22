@@ -32,7 +32,6 @@ package main
 import (
 	"log"
 	"net/http"
-
 	"github.com/kevinpollet/nego"
 )
 
@@ -42,11 +41,8 @@ func main() {
 		contentEncoding := nego.ContentEncoding(req, "gzip", "deflate")
 		contentLanguage := nego.ContentLanguage(req, "fr", "en")
 		contentType := nego.ContentType(req, "text/html", "text/plain")
-
-		rw.WriteHeader(http.StatusOK)
+		...
 	})
-
-	http.ListenAndServe(":8080", handler)
 }
 ```
 

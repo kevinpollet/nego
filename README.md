@@ -48,17 +48,10 @@ func main() {
 
 ## Examples
 
-The [examples](./Examples) directory contains an [example](./examples/main.go) which returns the content `type`, `charset`, `encoding` and `language` negotiated with the `Accept`, `Accept-Charset`, `Accept-Language` and `Accept-Encoding` headers present in the request.
+The [examples](./examples) directory contains the following examples:
 
-```shell
-$ go run examples/main.go
-$ curl localhost:8080 -H "Accept-Charset: utf-8, utf-16" -H "Accept-Language: fr;q=0.3, en" -H "Accept-Encoding: br, gzip" -H "Accept: text/plain"
-
-Content-Charset: utf-8
-Content-Encoding: gzip
-Content-Language: en
-Content-Type: text/plain
-```
+- [echo](./examples/echo) — This example returns the negotiated response content `type`, `charset`, `encoding` and `language`.
+- [compress](./examples/compress) — This example negotiates the response content `encoding` and compresses the response body if the client supports the `gzip` encoding.
 
 ## Contributing
 

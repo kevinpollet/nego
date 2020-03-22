@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	negotiateHandler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		contentCharset := nego.ContentCharset(req, "UTF-8")
+	handler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		contentCharset := nego.ContentCharset(req, "utf-8")
 		contentEncoding := nego.ContentEncoding(req, "gzip", "deflate")
 		contentLanguage := nego.ContentLanguage(req, "fr", "en")
 		contentType := nego.ContentType(req, "text/html", "text/plain")
@@ -24,5 +24,5 @@ func main() {
 		io.WriteString(rw, fmt.Sprintln("Content-Type:", contentType))         // nolint
 	})
 
-	log.Fatal(http.ListenAndServe(":8080", negotiateHandler))
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }

@@ -8,7 +8,7 @@
 
 Package `nego` provides an [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) compliant implementation of [HTTP Content Negotiation](https://en.wikipedia.org/wiki/Content_negotiation).
 
-As defined in [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) the following request headers are sent by a user agent to engage in proactive negotiation of the response content: `Accept`, `Accept-Charset`, `Accept-Language` and `Accept-Encoding`. This package provides convenient functions to nego the best and acceptable response content `type`, `charset`, `language` and `encoding` that should be returned by the `HTTP` server.
+As defined in [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) the following request headers are sent by a user agent to engage in proactive negotiation of the response content: `Accept`, `Accept-Charset`, `Accept-Language` and `Accept-Encoding`. This package provides convenient functions to negotiate the best and acceptable response content `type`, `charset`, `language` and `encoding`.
 
 ## Table of Contents <!-- omit in toc -->
 
@@ -38,9 +38,9 @@ import (
 
 func main() {
 	handler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		contentCharset := nego.ContentCharset(req, "UTF-8")
-		contentEncoding := nego.ContentEncoding(req, "br", "gzip", "deflate")
-		contentLanguage := nego.ContentLanguage(req, "en", "en-US")
+		contentCharset := nego.ContentCharset(req, "utf-8")
+		contentEncoding := nego.ContentEncoding(req, "gzip", "deflate")
+		contentLanguage := nego.ContentLanguage(req, "fr", "en")
 		contentType := nego.ContentType(req, "text/html", "text/plain")
 
 		rw.WriteHeader(http.StatusOK)
@@ -52,15 +52,16 @@ func main() {
 
 ## Examples
 
-The [examples](./Examples) directory contains an [example](./examples/main.go) which returns the content `charset`, `encoding` and `language` negotiated with the `Accept-Charset`, `Accept-Language` and `Accept-Encoding` headers present in the request.
+The [examples](./Examples) directory contains an [example](./examples/main.go) which returns the content `type`, `charset`, `encoding` and `language` negotiated with the `Accept`, `Accept-Charset`, `Accept-Language` and `Accept-Encoding` headers present in the request.
 
 ```shell
 $ go run examples/main.go
-$ curl localhost:8080 -H "Accept-Charset: utf-8, utf-16" -H "Accept-Language: fr;q=0.3, en" -H "Accept-Encoding: br, gzip"
+$ curl localhost:8080 -H "Accept-Charset: utf-8, utf-16" -H "Accept-Language: fr;q=0.3, en" -H "Accept-Encoding: br, gzip" -H "Accept: text/plain"
 
 Content-Charset: utf-8
 Content-Encoding: gzip
 Content-Language: en
+Content-Type: text/plain
 ```
 
 ## Contributing

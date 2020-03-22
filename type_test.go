@@ -1,4 +1,4 @@
-package negotiate // nolint
+package nego // nolint
 
 import (
 	"net/http"

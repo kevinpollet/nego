@@ -1,14 +1,14 @@
-# negotiate <!-- omit in toc -->
+# nego <!-- omit in toc -->
 
-[![Build Status](https://github.com/kevinpollet/negotiate/workflows/build/badge.svg)](https://github.com/kevinpollet/negotiate/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/kevinpollet/negotiate?burst=)](https://goreportcard.com/report/github.com/kevinpollet/negotiate)
-[![GoDoc](https://godoc.org/github.com/kevinpollet/negotiate?status.svg)](https://pkg.go.dev/github.com/kevinpollet/negotiate)
+[![Build Status](https://github.com/kevinpollet/nego/workflows/build/badge.svg)](https://github.com/kevinpollet/nego/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kevinpollet/nego?burst=)](https://goreportcard.com/report/github.com/kevinpollet/nego)
+[![GoDoc](https://godoc.org/github.com/kevinpollet/nego?status.svg)](https://pkg.go.dev/github.com/kevinpollet/nego)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
-[![License](https://img.shields.io/github/license/kevinpollet/negotiate)](./LICENSE.md)
+[![License](https://img.shields.io/github/license/kevinpollet/nego)](./LICENSE.md)
 
-Package `negotiate` provides an [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) compliant implementation of [HTTP Content Negotiation](https://en.wikipedia.org/wiki/Content_negotiation).
+Package `nego` provides an [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) compliant implementation of [HTTP Content Negotiation](https://en.wikipedia.org/wiki/Content_negotiation).
 
-As defined in [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) the following request headers are sent by a user agent to engage in proactive negotiation of the response content: `Accept`, `Accept-Charset`, `Accept-Language` and `Accept-Encoding`. This package provides convenient functions to negotiate the best and acceptable response content `type`, `charset`, `language` and `encoding` that should be returned by the `HTTP` server.
+As defined in [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) the following request headers are sent by a user agent to engage in proactive negotiation of the response content: `Accept`, `Accept-Charset`, `Accept-Language` and `Accept-Encoding`. This package provides convenient functions to nego the best and acceptable response content `type`, `charset`, `language` and `encoding` that should be returned by the `HTTP` server.
 
 ## Table of Contents <!-- omit in toc -->
 
@@ -21,7 +21,7 @@ As defined in [RFC 7231](https://tools.ietf.org/html/rfc7231#section-5.3) the fo
 ## Install
 
 ```shell
-go get github.com/kevinpollet/negotiate
+go get github.com/kevinpollet/nego
 ```
 
 ## Usage
@@ -33,15 +33,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kevinpollet/negotiate"
+	"github.com/kevinpollet/nego"
 )
 
 func main() {
 	handler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		contentCharset := negotiate.ContentCharset(req, "UTF-8")
-		contentEncoding := negotiate.ContentEncoding(req, "br", "gzip", "deflate")
-		contentLanguage := negotiate.ContentLanguage(req, "en", "en-US")
-		contentType := negotiate.ContentType(req, "text/html", "text/plain")
+		contentCharset := nego.ContentCharset(req, "UTF-8")
+		contentEncoding := nego.ContentEncoding(req, "br", "gzip", "deflate")
+		contentLanguage := nego.ContentLanguage(req, "en", "en-US")
+		contentType := nego.ContentType(req, "text/html", "text/plain")
 
 		rw.WriteHeader(http.StatusOK)
 	})

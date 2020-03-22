@@ -6,15 +6,15 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kevinpollet/negotiate"
+	"github.com/kevinpollet/nego"
 )
 
 func main() {
 	negotiateHandler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		contentCharset := negotiate.ContentCharset(req, "UTF-8")
-		contentEncoding := negotiate.ContentEncoding(req, "gzip", "deflate")
-		contentLanguage := negotiate.ContentLanguage(req, "fr", "en")
-		contentType := negotiate.ContentType(req, "text/html", "text/plain")
+		contentCharset := nego.ContentCharset(req, "UTF-8")
+		contentEncoding := nego.ContentEncoding(req, "gzip", "deflate")
+		contentLanguage := nego.ContentLanguage(req, "fr", "en")
+		contentType := nego.ContentType(req, "text/html", "text/plain")
 
 		rw.WriteHeader(http.StatusOK)
 

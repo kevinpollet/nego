@@ -1,4 +1,4 @@
-module github.com/kevinpollet/negotiate
+module github.com/kevinpollet/nego
 
 go 1.14
 

@@ -1,4 +1,4 @@
-package negotiate
+package nego
 
 import (
 	"net/http"

@@ -4,8 +4,11 @@ import "net/http"
 
 const encodingIdentity = "identity"
 
-// NegotiateContentCharset returns the best offered charset for the request's Accept-Charset header.
-// If no offers are acceptable, then "" is returned.
+// NegotiateContentCharset returns the best acceptable charset offer to use in the response according
+// to the Accept-Charset request's header. If the given offer list is empty or no offer is acceptable
+// then, an empty string is returned.
+//
+// See section 5.3.3 of RFC 7321 for more details: https://tools.ietf.org/html/rfc7231#section-5.3.3
 func NegotiateContentCharset(req *http.Request, offerCharsets ...string) string {
 	bestQvalue := 0.0
 	bestCharset := ""
@@ -25,8 +28,11 @@ func NegotiateContentCharset(req *http.Request, offerCharsets ...string) string 
 	return bestCharset
 }
 
-// NegotiateContentEncoding returns the best offered charset for the request's Accept-Encoding header.
-// If no offers are acceptable, then identity encoding is returned or "" if it is explicitly excluded.
+// NegotiateContentEncoding returns the best acceptable encoding offer to use in the response according
+// to the Accept-Encoding request's header. If the given offer list is empty or no offer is acceptable
+// then, an empty string is returned.
+//
+// See section 5.3.4 of RFC 7321 for more details: https://tools.ietf.org/html/rfc7231#section-5.3.4
 func NegotiateContentEncoding(req *http.Request, offerEncodings ...string) string {
 	bestQvalue := 0.0
 	bestEncoding := ""
@@ -50,8 +56,11 @@ func NegotiateContentEncoding(req *http.Request, offerEncodings ...string) strin
 	return bestEncoding
 }
 
-// NegotiateContentLanguage returns the best offered language for the request's Accept-Language header.
-// If no offers are acceptable, then "" is returned.
+// NegotiateContentLanguage returns the best acceptable language offer to use in the response according
+// to the Accept-Language request's header. If the given offer list is empty or no offer is acceptable
+// then, an empty string is returned.
+//
+// See section 5.3.5 of RFC 7321 for more details: https://tools.ietf.org/html/rfc7231#section-5.3.5
 func NegotiateContentLanguage(req *http.Request, offerLanguages ...string) string {
 	bestQvalue := 0.0
 	bestLanguage := ""
@@ -71,8 +80,11 @@ func NegotiateContentLanguage(req *http.Request, offerLanguages ...string) strin
 	return bestLanguage
 }
 
-// ContentType returns the best offered language for the request's Accept header.
-// If no offers are acceptable, then "" is returned.
+// NegotiateContentType returns the best acceptable media type offer to use in the response according
+// to the Accept-Language request's header. If the given offer list is empty or no offer is acceptable
+// then, an empty string is returned.
+//
+// See section 5.3.2 of RFC 7321 for more details: https://tools.ietf.org/html/rfc7231#section-5.3.2
 func NegotiateContentType(req *http.Request, offerTypes ...string) string {
 	bestType := ""
 	bestQvalue := 0.0

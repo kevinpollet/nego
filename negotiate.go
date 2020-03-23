@@ -85,21 +85,21 @@ func NegotiateContentLanguage(req *http.Request, offerLanguages ...string) strin
 // then, an empty string is returned.
 //
 // See section 5.3.2 of RFC 7321 for more details: https://tools.ietf.org/html/rfc7231#section-5.3.2
-func NegotiateContentType(req *http.Request, offerTypes ...string) string {
-	bestType := ""
+func NegotiateContentType(req *http.Request, offerMediaTypes ...string) string {
+	bestMediaType := ""
 	bestQvalue := 0.0
 
 	acceptTypes, exists := parseAccept(req.Header, "Accept")
-	if !exists && len(offerTypes) > 0 {
-		return offerTypes[0]
+	if !exists && len(offerMediaTypes) > 0 {
+		return offerMediaTypes[0]
 	}
 
-	for _, offer := range offerTypes {
+	for _, offer := range offerMediaTypes {
 		if qvalue, exists := acceptTypes.qvalue(offer); exists && qvalue > bestQvalue {
-			bestType = offer
+			bestMediaType = offer
 			bestQvalue = qvalue
 		}
 	}
 
-	return bestType
+	return bestMediaType
 }

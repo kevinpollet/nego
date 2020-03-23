@@ -2,7 +2,11 @@ package nego
 
 import "net/http"
 
-const encodingIdentity = "identity"
+// The identity encoding constant used as a synonym for "no encoding" in order to communicate when
+// no encoding is preferred.
+//
+// See https://tools.ietf.org/html/rfc7231#section-5.3.4
+const EncodingIdentity = "identity"
 
 // NegotiateContentCharset returns the best acceptable charset offer to use in the response according
 // to the Accept-Charset request's header. If the given offer list is empty or no offer is acceptable
@@ -49,8 +53,8 @@ func NegotiateContentEncoding(req *http.Request, offerEncodings ...string) strin
 		}
 	}
 
-	if qvalue, exists := acceptEncodings.qvalue(encodingIdentity); bestEncoding == "" && (!exists || qvalue > 0.0) {
-		return encodingIdentity
+	if qvalue, exists := acceptEncodings.qvalue(EncodingIdentity); bestEncoding == "" && (!exists || qvalue > 0.0) {
+		return EncodingIdentity
 	}
 
 	return bestEncoding

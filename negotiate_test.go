@@ -54,8 +54,7 @@ func TestNegotiateContentCharset(t *testing.T) {
 			t.Parallel()
 
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
-
-			if len(testCase.accept) > 0 {
+			if testCase.accept != "" {
 				req.Header.Add("Accept-Charset", testCase.accept)
 			}
 
@@ -130,8 +129,7 @@ func TestNegotiateContentEncoding(t *testing.T) { //nolint
 			t.Parallel()
 
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
-
-			if len(testCase.accept) > 0 {
+			if testCase.accept != "" {
 				req.Header.Add("Accept-Encoding", testCase.accept)
 			}
 
@@ -188,8 +186,7 @@ func TestNegotiateContentLanguage(t *testing.T) {
 			t.Parallel()
 
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
-
-			if len(testCase.accept) > 0 {
+			if testCase.accept != "" {
 				req.Header.Add("Accept-Language", testCase.accept)
 			}
 
@@ -264,8 +261,7 @@ func TestNegotiateContentType(t *testing.T) { // nolint
 			t.Parallel()
 
 			req := httptest.NewRequest(http.MethodGet, "http://dummy.com", nil)
-
-			if len(testCase.accept) > 0 {
+			if testCase.accept != "" {
 				req.Header.Add("Accept", testCase.accept)
 			}
 

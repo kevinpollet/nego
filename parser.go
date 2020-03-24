@@ -38,7 +38,7 @@ func parseAccept(header http.Header, key string) (accept, bool) {
 	accepts := make(map[string]float64)
 
 	for _, value := range values {
-		if len(value) == 0 {
+		if value == "" {
 			continue
 		}
 

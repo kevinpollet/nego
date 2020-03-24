@@ -9,34 +9,34 @@ import (
 
 func TestParseAccept(t *testing.T) {
 	testCases := []struct {
-		desc    string
-		accepts string
-		expLen  int
+		desc   string
+		accept string
+		expLen int
 	}{
 		{
-			desc:    "should return an empty map if the given values are empty",
-			accepts: "",
-			expLen:  0,
+			desc:   "should return an empty map if the given values are empty",
+			accept: "",
+			expLen: 0,
 		},
 		{
-			desc:    "should return a map with one element",
-			accepts: "gzip",
-			expLen:  1, //nolint
+			desc:   "should return a map with one element",
+			accept: "gzip",
+			expLen: 1, //nolint
 		},
 		{
-			desc:    "should return a map with the given number of elements",
-			accepts: "gzip,deflate",
-			expLen:  2, //nolint
+			desc:   "should return a map with the given number of elements",
+			accept: "gzip,deflate",
+			expLen: 2, //nolint
 		},
 		{
-			desc:    "should return a map with the given number of elements ignoring spaces",
-			accepts: "gzip , deflate",
-			expLen:  2, //nolint
+			desc:   "should return a map with the given number of elements ignoring spaces",
+			accept: "gzip , deflate",
+			expLen: 2, //nolint
 		},
 		{
-			desc:    "should return a map with the given number of elements in the given values",
-			accepts: "gzip, deflate, br",
-			expLen:  3, //nolint
+			desc:   "should return a map with the given number of elements in the given values",
+			accept: "gzip, deflate, br",
+			expLen: 3, //nolint
 		},
 	}
 
@@ -47,7 +47,7 @@ func TestParseAccept(t *testing.T) {
 			t.Parallel()
 
 			header := make(http.Header)
-			header.Add("Accept", testCase.accepts)
+			header.Add("Accept", testCase.accept)
 
 			specs, _ := parseAccept(header, "Accept")
 

@@ -35,13 +35,6 @@ func main() {
 }
 ```
 
-## Examples
-
-The [examples](./examples) directory contains the following examples:
-
-- [echo](./examples/echo) — This example returns the negotiated response content `type`, `charset`, `encoding` and `language`.
-- [compress](./examples/compress) — This example negotiates the response content `encoding` and compresses the response body if the client supports the `gzip` encoding.
-
 ## Contributing
 
 Contributions are welcome!

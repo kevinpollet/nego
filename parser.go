@@ -15,6 +15,7 @@ func (a accept) qvalue(offer string) (float64, bool) {
 
 	if !strings.Contains(offer, "/") {
 		qvalue, exists := a["*"]
+
 		return qvalue, exists
 	}
 
@@ -28,7 +29,7 @@ func (a accept) qvalue(offer string) (float64, bool) {
 		return qvalue, exists
 	}
 
-	return 0.0, false // nolint
+	return 0.0, false
 }
 
 // parseAccept parses the values of a content negotiation header. The following request headers are sent

@@ -1,23 +1,38 @@
 name: build
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [1.12, 1.13, 1.14]
+        version: [ 1.16, 1.17 ]
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-contrib/golangci-lint@v1
-      - uses: actions/setup-go@v1
+      - name: Check-out
+        uses: actions/checkout@v2
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.version }}
 
-      - uses: actions/cache@v1
+      - name: Lint
+        uses: golangci/golangci-lint-action@v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
         with:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ matrix.version }}-${{ hashFiles('**/go.sum') }}
 
-      - run: go get -v -d ./...
-      - run: go test -v ./...
-      - run: go build -v ./...
+      - name: Download and check dependencies
+        run: |
+          go mod tidy
+          git diff --exit-code go.mod
+          git diff --exit-code go.sum
+
+      - name: Test
+        run: go test -v -race ./...

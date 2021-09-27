@@ -1,2 +1,28 @@
+run:
+  deadline: 10m
+  skip-files: [ ]
+
+linters-settings:
+  godox:
+    keywords:
+      - FIXME
+
+  funlen:
+    lines: -1
+    statements: 50
+
 linters:
   enable-all: true
+  disable:
+    - maligned # deprecated
+    - interfacer # deprecated
+    - scopelint # deprecated
+    - golint # deprecated
+    - wrapcheck
+    - exhaustivestruct
+    - testpackage
+    - paralleltest
+    - tparallel
+    - gomnd
+    - goerr113
+    - wsl

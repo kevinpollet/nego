@@ -21,22 +21,22 @@ func TestParseAccept(t *testing.T) {
 		{
 			desc:   "should return a map with one element",
 			accept: "gzip",
-			expLen: 1, //nolint
+			expLen: 1,
 		},
 		{
 			desc:   "should return a map with the given number of elements",
 			accept: "gzip,deflate",
-			expLen: 2, //nolint
+			expLen: 2,
 		},
 		{
 			desc:   "should return a map with the given number of elements ignoring spaces",
 			accept: "gzip , deflate",
-			expLen: 2, //nolint
+			expLen: 2,
 		},
 		{
 			desc:   "should return a map with the given number of elements in the given values",
 			accept: "gzip, deflate, br",
-			expLen: 3, //nolint
+			expLen: 3,
 		},
 	}
 
@@ -67,25 +67,25 @@ func TestParseSpec(t *testing.T) {
 			desc:  "should return the parsed name with the default quality",
 			value: "test",
 			expN:  "test",
-			expQ:  1.0, // nolint
+			expQ:  1.0,
 		},
 		{
 			desc:  "should return the parsed name with the given quality",
 			value: "test;q=0.1",
 			expN:  "test",
-			expQ:  0.1, // nolint
+			expQ:  0.1,
 		},
 		{
 			desc:  "should return the parsed name with the given quality ignoring whitespaces",
 			value: "test ; q=0.1",
 			expN:  "test",
-			expQ:  0.1, // nolint
+			expQ:  0.1,
 		},
 		{
 			desc:  "should return the parsed name with the given quality ignoring extra params",
 			value: "test ; format=foo; q=0.1; format=bar",
 			expN:  "test",
-			expQ:  0.1, // nolint
+			expQ:  0.1,
 		},
 	}
 
@@ -112,7 +112,7 @@ func TestParseQuality(t *testing.T) {
 		{
 			desc:  "should return the parsed value",
 			value: "1.0",
-			expQ:  1.0, // nolint
+			expQ:  1.0,
 		},
 		{
 			desc:  "should return -1 if the value cannot be parsed",

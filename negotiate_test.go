@@ -65,7 +65,7 @@ func TestNegotiateContentCharset(t *testing.T) {
 	}
 }
 
-func TestNegotiateContentEncoding(t *testing.T) { //nolint
+func TestNegotiateContentEncoding(t *testing.T) {
 	testCases := []struct {
 		desc        string
 		offers      []string
@@ -197,7 +197,7 @@ func TestNegotiateContentLanguage(t *testing.T) {
 	}
 }
 
-func TestNegotiateContentType(t *testing.T) { // nolint
+func TestNegotiateContentType(t *testing.T) {
 	testCases := []struct {
 		desc         string
 		offers       []string
